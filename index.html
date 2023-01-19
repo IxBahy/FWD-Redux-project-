@@ -6,10 +6,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js'></script>
 </head>
 
-<body>
-    <script src="index.js"></script>
+<body class="bg-dark">
+    <div class="container text-white text-center">
+        <h1>Todo List</h1>
+        <div class="border-1 border-white d-flex justify-content-center">
+            <input id="todo" type="text" class="form-control w-50" placeholder="Add todo">
+            <button id="todoBtn" class="btn btn-outline-light mx-3"> Add todo</button>
+        </div>
+        <ul id="todos" class="text-start">
+
+        </ul>
+    </div>
+
+    <div class="container text-info text-center">
+        <h1>Goals </h1>
+        <div id="todo" class="border-1 border-white d-flex justify-content-center">
+            <input id="goal" type="text" class="form-control w-50" placeholder="Add goal">
+            <button id="goalBtn" class="btn btn-outline-info mx-3"> Add goal</button>
+        </div>
+        <ul id="goals" class="text-start">
+
+        </ul>
+    </div>
+
+    <script src="js/index.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
 </body>
 
 </html>

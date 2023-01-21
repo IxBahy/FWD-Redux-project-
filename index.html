@@ -79,9 +79,29 @@
             return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
         }
 
+        const checkThenDispatch = (store, action) => {
+            if (checkAction(action, 'todo')) {
+                return showAlert('Nope, thats a bad idea ')
+            }
+            if (checkAction(action, 'goal')) {
+                return showAlert('Nope, thats a bad idea ')
+            }
+            return store.dispatch(action)
+        }
+        const checkAction = (action, state) => {
+            return action.hasOwnProperty(state) ?
+                (action.type === ADD_TODO || action.type === ADD_GOAL) &&
+                action[`${state}`]['name'].toLowerCase().includes('bitcoin')
+                :
+                false
+        }
+        const showAlert = (message) => {
+            return alert(message)
+        }
         //*****************************************************************************/
         //*****************************************************************************/
 
+        //child reducers
 
         const todos = (state = [], action) => {
             switch (action.type) {
@@ -123,7 +143,7 @@
             const input = document.getElementById('todo')
             const name = input.value;
             input.value = ''
-            store.dispatch(addTodoAction({
+            checkThenDispatch(store, addTodoAction({
                 name,
                 complete: false,
                 id: generateId()
@@ -133,7 +153,7 @@
             const input = document.getElementById('goal')
             const name = input.value;
             input.value = ''
-            store.dispatch(addGoalAction({
+            checkThenDispatch(store, addGoalAction({
                 name,
                 id: generateId()
             }))
@@ -142,7 +162,7 @@
             const node = document.createElement('li')
             const text = document.createTextNode(todo.name)
             const removeBtn = createRemoveButton(() => {
-                store.dispatch(removeTodoAction(todo.id))
+                checkThenDispatch(store, removeTodoAction(todo.id))
             })
             removeBtn.className = 'btn btn-outline-danger mx-2'
 
@@ -150,7 +170,7 @@
             node.appendChild(removeBtn)
             node.className = todo.complete ? 'text-success' : 'text-danger'
             node.addEventListener('click', () => {
-                store.dispatch(toggleTodoAction(todo.id))
+                checkThenDispatch(store, toggleTodoAction(todo.id))
             })
             document.getElementById('todos').appendChild(node)
         }
@@ -159,7 +179,7 @@
             const node = document.createElement('li')
             const text = document.createTextNode(goal.name)
             const removeBtn = createRemoveButton(() => {
-                store.dispatch(removeGoalAction(goal.id))
+                checkThenDispatch(store, removeGoalAction(goal.id))
             })
             removeBtn.className = 'btn btn-outline-danger mx-2'
             node.appendChild(text)

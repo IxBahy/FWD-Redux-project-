@@ -79,15 +79,7 @@
             return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
         }
 
-        const checkThenDispatch = (store, action) => {
-            if (checkAction(action, 'todo')) {
-                return showAlert('Nope, thats a bad idea ')
-            }
-            if (checkAction(action, 'goal')) {
-                return showAlert('Nope, thats a bad idea ')
-            }
-            return store.dispatch(action)
-        }
+
         const checkAction = (action, state) => {
             return action.hasOwnProperty(state) ?
                 (action.type === ADD_TODO || action.type === ADD_GOAL) &&
@@ -98,6 +90,20 @@
         const showAlert = (message) => {
             return alert(message)
         }
+        const checker =
+            (store) =>
+                (next) =>
+                    (action) => {
+                        if (checkAction(action, 'todo')) {
+                            return showAlert('Nope, thats a bad idea ')
+                        }
+                        else if (checkAction(action, 'goal')) {
+                            return showAlert('Nope, thats a bad idea ')
+                        }
+                        return next(action)
+                    }
+
+
         //*****************************************************************************/
         //*****************************************************************************/
 
@@ -143,7 +149,7 @@
             const input = document.getElementById('todo')
             const name = input.value;
             input.value = ''
-            checkThenDispatch(store, addTodoAction({
+            store.dispatch(addTodoAction({
                 name,
                 complete: false,
                 id: generateId()
@@ -153,7 +159,7 @@
             const input = document.getElementById('goal')
             const name = input.value;
             input.value = ''
-            checkThenDispatch(store, addGoalAction({
+            store.dispatch(addGoalAction({
                 name,
                 id: generateId()
             }))
@@ -162,7 +168,7 @@
             const node = document.createElement('li')
             const text = document.createTextNode(todo.name)
             const removeBtn = createRemoveButton(() => {
-                checkThenDispatch(store, removeTodoAction(todo.id))
+                store.dispatch(removeTodoAction(todo.id))
             })
             removeBtn.className = 'btn btn-outline-danger mx-2'
 
@@ -170,7 +176,7 @@
             node.appendChild(removeBtn)
             node.className = todo.complete ? 'text-success' : 'text-danger'
             node.addEventListener('click', () => {
-                checkThenDispatch(store, toggleTodoAction(todo.id))
+                store.dispatch(toggleTodoAction(todo.id))
             })
             document.getElementById('todos').appendChild(node)
         }
@@ -179,7 +185,7 @@
             const node = document.createElement('li')
             const text = document.createTextNode(goal.name)
             const removeBtn = createRemoveButton(() => {
-                checkThenDispatch(store, removeGoalAction(goal.id))
+                store.dispatch(removeGoalAction(goal.id))
             })
             removeBtn.className = 'btn btn-outline-danger mx-2'
             node.appendChild(text)
@@ -198,7 +204,7 @@
         const store = Redux.createStore(Redux.combineReducers({
             todos,
             goals
-        }))
+        }), Redux.applyMiddleware(checker))
 
         store.subscribe(() => {
             const { goals, todos } = store.getState()
